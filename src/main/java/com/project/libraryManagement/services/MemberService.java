@@ -5,7 +5,6 @@ import com.project.libraryManagement.models.core.Member;
 import com.project.libraryManagement.repositories.MemberRepository;
 import com.project.libraryManagement.utils.NotFoundException;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +21,7 @@ public class MemberService {
 
     public MemberDTO create(Member member) {
         Member createdMember = this.memberRepository.save(member);
-        MemberDTO memberDTO = mapToDto(createdMember);
-        return memberDTO;
+        return mapToDto(createdMember);
     }
 
     public List<MemberDTO> findAll() {
@@ -34,8 +32,7 @@ public class MemberService {
 
     public MemberDTO update(Long id, Member member) {
         Member memberUpdated = this.memberRepository.save(member);
-        MemberDTO memberDTO = mapToDto(memberUpdated);
-        return memberDTO;
+        return mapToDto(memberUpdated);
     }
 
     public Long delete(Long id) {
@@ -44,7 +41,7 @@ public class MemberService {
        memberRepository.delete(member);
        return id;
     }
-
+ 
     private MemberDTO mapToDto(Member member) {
         return modelMapper.map(member, MemberDTO.class);
     }

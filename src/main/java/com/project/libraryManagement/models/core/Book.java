@@ -16,7 +16,7 @@ public class Book {
 
    private String title;
 
-   @ManyToOne
+   @OneToOne
    private Author author;
 
    private String publicationDate;

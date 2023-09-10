@@ -39,5 +39,5 @@ public class MemberController {
     public ResponseEntity<?> delete(@PathVariable Long id) {
         Long memberId = memberService.delete(id);
         return ResponseEntity.ok(memberId);
-    }
+    } 
 }
