@@ -58,10 +58,14 @@ public class MemberService {
     }
 
     public Long delete(Long id) {
-       Member member = this.memberRepository.findById(id)
-               .orElseThrow(() -> new NotFoundException("Data member is not found"));
-       memberRepository.delete(member);
-       return id;
+        Boolean isMemberExist = this.memberRepository.existsById(id);
+        if (isMemberExist) {
+            memberRepository.deleteById(id);
+            return id;
+        }
+        else {
+            throw new NotFoundException("Data member is not found");
+        }
     }
  
     private MemberDTO mapToDto(Member member) {

@@ -23,14 +23,24 @@ public class AuthorService {
         return this.authorRepository.findAll();
     }
 
-    public Author update(Author author) {
-        return this.authorRepository.save(author);
+    public Author update(Long id, Author author) {
+        Boolean isAuthorExist = authorRepository.existsById(id);
+        if (isAuthorExist) {
+            return this.authorRepository.save(author);
+        }
+        else {
+            throw new NotFoundException("Author is not found");
+        }
     }
 
     public Long delete(Long id) {
-        Author author = this.authorRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Author is not found"));
-        authorRepository.delete(author);
-        return id;
+        Boolean isAuthorExist = authorRepository.existsById(id);
+        if (isAuthorExist) {
+            authorRepository.deleteById(id);
+            return id;
+        }
+        else {
+            throw new NotFoundException("Author is not found");
+        }
     }
 }

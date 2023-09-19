@@ -6,11 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -42,7 +38,7 @@ public class GlobalExceptionHandler {
         List<String> errors = ex.getConstraintViolations()
                 .stream().map(err -> err.getMessage()).toList();
         var response = new ExceptionResponse();
-        response.setMessage(errors.toString());
+        response.setMessage(errors);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         response.setTimestamp(System.currentTimeMillis());
         response.setError(HttpStatus.BAD_REQUEST);

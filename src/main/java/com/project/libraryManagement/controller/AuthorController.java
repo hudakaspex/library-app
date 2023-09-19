@@ -2,6 +2,7 @@ package com.project.libraryManagement.controller;
 
 import com.project.libraryManagement.models.core.Author;
 import com.project.libraryManagement.services.AuthorService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,9 +29,9 @@ public class AuthorController {
        return ResponseEntity.ok(createdAuthor);
     }
 
-    @PutMapping()
-    public ResponseEntity<Author> update(@RequestBody Author author) {
-        Author updatedAuthor = authorService.update(author);
+    @PutMapping("/{id}")
+    public ResponseEntity<Author> update(@PathVariable Long id, @Valid @RequestBody Author author) {
+        Author updatedAuthor = authorService.update(id, author);
         return ResponseEntity.ok(updatedAuthor);
     }
 
