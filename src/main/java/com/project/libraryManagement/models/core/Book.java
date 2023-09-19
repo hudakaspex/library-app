@@ -11,7 +11,7 @@ import lombok.Setter;
 public class Book {
 
    @Id()
-   @GeneratedValue(strategy = GenerationType.AUTO)
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
    private String title;
@@ -19,9 +19,11 @@ public class Book {
    @OneToOne
    private Author author;
 
+   @Column(name = "publication_date")
    private String publicationDate;
 
    private String ISBN;
 
+   @Enumerated(EnumType.STRING)
    private BookType type;
 }

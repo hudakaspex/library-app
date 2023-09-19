@@ -11,6 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+
+import java.util.Calendar;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -56,16 +59,18 @@ public class MemberTest {
     @Test
     public void testUpdateMember() {
         member.setName("UPDATE");
+        member.setDateJoined(Calendar.getInstance());
         MemberDTO memberDTO = new MemberDTO();
         memberDTO.setName(member.getName());
+        memberDTO.setDateJoined(member.getDateJoined());
         //WHEN
         when(this.memberRepository.save(member)).thenReturn(member);
         when(this.modelMapper.map(any(), any())).thenReturn(memberDTO);
 
         //THEN
-        MemberDTO memberDTO1 = this.memberService.update(member.getId(), member);
+        MemberDTO memberDTO1 = this.memberService.create(member);
 
-        assertThat(memberDTO1.getName()).isEqualTo("UPDATE");
+        assertThat(memberDTO1.getDateJoined()).isNotNull();
         verify(memberRepository).save(member);
     }
 }

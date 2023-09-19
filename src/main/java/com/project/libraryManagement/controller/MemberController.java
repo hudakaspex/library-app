@@ -3,6 +3,7 @@ package com.project.libraryManagement.controller;
 import com.project.libraryManagement.dto.MemberDTO;
 import com.project.libraryManagement.models.core.Member;
 import com.project.libraryManagement.services.MemberService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public class MemberController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MemberDTO> update(@PathVariable Long id, @RequestBody Member member) {
+    public ResponseEntity<MemberDTO> update(@PathVariable Long id, @Valid @RequestBody Member member) {
         MemberDTO memberDTO = this.memberService.update(id, member);
         return ResponseEntity.ok(memberDTO);
     }

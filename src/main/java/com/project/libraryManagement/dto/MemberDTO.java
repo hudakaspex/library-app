@@ -4,6 +4,8 @@ import com.project.libraryManagement.models.core.Loan;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 
 @Getter
@@ -19,5 +21,5 @@ public class MemberDTO {
 
     private String email;
 
-    private List<Loan> loans;
+    private Calendar dateJoined;
 }
