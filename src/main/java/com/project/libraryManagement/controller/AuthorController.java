@@ -24,7 +24,7 @@ public class AuthorController {
     }
 
     @PostMapping()
-    public ResponseEntity<Author> create(@RequestBody() Author author) {
+    public ResponseEntity<Author> create(@Valid @RequestBody() Author author) {
        Author createdAuthor = this.authorService.create(author);
        return ResponseEntity.ok(createdAuthor);
     }
@@ -34,7 +34,6 @@ public class AuthorController {
         Author updatedAuthor = authorService.update(id, author);
         return ResponseEntity.ok(updatedAuthor);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         Long authorId = authorService.delete(id);

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @Setter
@@ -32,8 +31,9 @@ public class Loan {
     @Enumerated(value = EnumType.STRING)
     private LoanStatus status;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "return_date")
-    private Date returnDate;
+    private Calendar returnDate;
 
     @OneToOne
     private Librarian librarian;

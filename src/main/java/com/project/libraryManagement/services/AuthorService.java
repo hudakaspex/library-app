@@ -26,6 +26,7 @@ public class AuthorService {
     public Author update(Long id, Author author) {
         Boolean isAuthorExist = authorRepository.existsById(id);
         if (isAuthorExist) {
+            author.setId(id);
             return this.authorRepository.save(author);
         }
         else {

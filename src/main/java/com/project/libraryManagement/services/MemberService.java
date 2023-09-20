@@ -49,6 +49,7 @@ public class MemberService {
     public MemberDTO update(Long id, Member member) {
         Boolean isMemberExist = this.memberRepository.existsById(id);
         if (isMemberExist) {
+            member.setId(id);
             Member memberUpdated = this.memberRepository.save(member);
             return mapToDto(memberUpdated);
         }

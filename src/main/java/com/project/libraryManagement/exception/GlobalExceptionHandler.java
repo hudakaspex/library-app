@@ -11,8 +11,6 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private Object a;
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> generalException(Exception ex) {
         var response = new ExceptionResponse();

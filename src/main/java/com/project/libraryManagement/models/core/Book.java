@@ -2,8 +2,11 @@ package com.project.libraryManagement.models.core;
 
 import com.project.libraryManagement.models.enums.BookType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Calendar;
 
 @Getter
 @Setter
@@ -14,13 +17,15 @@ public class Book {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
+   @NotBlank(message = "Title is required")
    private String title;
 
    @OneToOne
    private Author author;
 
+   @Temporal(TemporalType.TIMESTAMP)
    @Column(name = "publication_date")
-   private String publicationDate;
+   private Calendar publicationDate;
 
    private String ISBN;
 
