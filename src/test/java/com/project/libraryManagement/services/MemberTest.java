@@ -12,6 +12,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Calendar;
 
 import static org.assertj.core.api.Assertions.*;
@@ -42,6 +45,11 @@ public class MemberTest {
     }
 
     @Test
+    public void testDate() {
+        log.info(ZoneOffset.UTC.getId());
+    }
+
+    @Test
     public void testCreateMember() {
         MemberDTO memberDTO = new MemberDTO();
         memberDTO.setName(member.getName());
@@ -59,7 +67,7 @@ public class MemberTest {
     @Test
     public void testUpdateMember() {
         member.setName("UPDATE");
-        member.setDateJoined(Calendar.getInstance());
+        member.setDateJoined(LocalDateTime.now());
         MemberDTO memberDTO = new MemberDTO();
         memberDTO.setName(member.getName());
         memberDTO.setDateJoined(member.getDateJoined());

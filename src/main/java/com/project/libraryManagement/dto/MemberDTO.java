@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.List;
 
@@ -21,5 +22,5 @@ public class MemberDTO {
 
     private String email;
 
-    private Calendar dateJoined;
+    private LocalDateTime dateJoined;
 }

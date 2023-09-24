@@ -33,7 +33,6 @@ public class MemberService {
      * */
     private Member initalSetMember(Member member) {
         member.setSplitName(member.getName());
-        member.setDateJoined(Calendar.getInstance());
         return member;
     }
 
