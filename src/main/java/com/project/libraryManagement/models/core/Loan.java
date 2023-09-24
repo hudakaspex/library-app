@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.*;
 import java.util.Calendar;
 import java.util.List;
 
@@ -17,13 +18,11 @@ public class Loan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")
-    private Calendar startDate;
+    private LocalDateTime startDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_date")
-    private Calendar endDate;
+    private LocalDateTime endDate;
 
     @OneToMany
     private List<Book> books;
@@ -31,9 +30,8 @@ public class Loan {
     @Enumerated(value = EnumType.STRING)
     private LoanStatus status;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "return_date")
-    private Calendar returnDate;
+    private LocalDateTime returnDate;
 
     @OneToOne
     private Librarian librarian;

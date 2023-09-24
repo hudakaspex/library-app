@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 
 @Getter
@@ -16,7 +17,6 @@ import java.util.Calendar;
 public class Member extends Person {
 
     @NotNull(message = "Date Joined is requried")
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_joined")
-    private Calendar dateJoined;
+    private LocalDateTime dateJoined;
 }

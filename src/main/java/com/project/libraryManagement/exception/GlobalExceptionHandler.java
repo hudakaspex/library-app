@@ -1,11 +1,14 @@
 package com.project.libraryManagement.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Arrays;
 import java.util.List;
 
 @RestControllerAdvice
@@ -15,6 +18,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> generalException(Exception ex) {
         var response = new ExceptionResponse();
         response.setMessage(ex.getMessage());
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        response.setTimestamp(System.currentTimeMillis());
+        response.setError(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ExceptionResponse> handleDataAccessException(DataAccessException ex) {
+        var response = new ExceptionResponse();
+        response.setMessage(ex.getMostSpecificCause().getMessage());
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.setTimestamp(System.currentTimeMillis());
         response.setError(HttpStatus.INTERNAL_SERVER_ERROR);

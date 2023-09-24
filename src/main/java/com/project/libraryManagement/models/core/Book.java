@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -23,9 +23,8 @@ public class Book {
    @OneToOne
    private Author author;
 
-   @Temporal(TemporalType.TIMESTAMP)
    @Column(name = "publication_date")
-   private Calendar publicationDate;
+   private LocalDateTime publicationDate;
 
    private String ISBN;
 
