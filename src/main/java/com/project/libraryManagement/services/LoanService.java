@@ -3,6 +3,7 @@ package com.project.libraryManagement.services;
 import com.project.libraryManagement.exception.NotFoundException;
 import com.project.libraryManagement.models.core.Loan;
 import com.project.libraryManagement.repositories.LoanRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class LoanService {
        return this.loanRepository.save(loan);
     }
 
+    @Transactional
     public Loan update(Long id, Loan loan) {
         Boolean isLoanExist = this.loanRepository.existsById(id);
         if (isLoanExist) {
@@ -34,6 +36,7 @@ public class LoanService {
         }
     }
 
+    @Transactional
     public Long deleteById(Long id) {
         Boolean isLoanExist = this.loanRepository.existsById(id);
         if (isLoanExist) {

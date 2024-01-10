@@ -4,6 +4,7 @@ import com.project.libraryManagement.dto.MemberDTO;
 import com.project.libraryManagement.models.core.Member;
 import com.project.libraryManagement.repositories.MemberRepository;
 import com.project.libraryManagement.exception.NotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class MemberService {
         this.modelMapper = modelMapper;
     }
 
+    @Transactional
     public MemberDTO create(Member member) {
         Member savedMember = initalSetMember(member);
         Member createdMember = this.memberRepository.save(savedMember);
@@ -45,6 +47,7 @@ public class MemberService {
         return memberDTOS;
     }
 
+    @Transactional
     public MemberDTO update(Long id, Member member) {
         Boolean isMemberExist = this.memberRepository.existsById(id);
         if (isMemberExist) {
@@ -57,6 +60,7 @@ public class MemberService {
         }
     }
 
+    @Transactional
     public Long delete(Long id) {
         Boolean isMemberExist = this.memberRepository.existsById(id);
         if (isMemberExist) {

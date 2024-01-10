@@ -3,6 +3,7 @@ package com.project.libraryManagement.services;
 import com.project.libraryManagement.models.core.Author;
 import com.project.libraryManagement.repositories.AuthorRepository;
 import com.project.libraryManagement.exception.NotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 public class AuthorService {
     private final AuthorRepository authorRepository;
 
-    private AuthorService(AuthorRepository authorRepository) {
+    AuthorService(AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
     }
 
@@ -23,6 +24,7 @@ public class AuthorService {
         return this.authorRepository.findAll();
     }
 
+    @Transactional
     public Author update(Long id, Author author) {
         Boolean isAuthorExist = authorRepository.existsById(id);
         if (isAuthorExist) {
@@ -34,6 +36,7 @@ public class AuthorService {
         }
     }
 
+    @Transactional
     public Long delete(Long id) {
         Boolean isAuthorExist = authorRepository.existsById(id);
         if (isAuthorExist) {

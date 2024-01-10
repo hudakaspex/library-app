@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 
 @Getter
 @Setter
@@ -24,7 +26,7 @@ public class Book {
    private Author author;
 
    @Column(name = "publication_date")
-   private LocalDateTime publicationDate;
+   private OffsetDateTime publicationDate;
 
    private String ISBN;
 

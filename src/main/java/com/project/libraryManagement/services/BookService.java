@@ -1,13 +1,19 @@
 package com.project.libraryManagement.services;
 
+import com.project.libraryManagement.dto.PageResponse;
 import com.project.libraryManagement.exception.NotFoundException;
 import com.project.libraryManagement.models.core.Book;
 import com.project.libraryManagement.repositories.BookRepository;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class BookService {
     private final BookRepository bookRepository;
 
@@ -23,6 +29,7 @@ public class BookService {
         return this.bookRepository.save(book);
     }
 
+    @Transactional
     public Book update(Long id, Book book) {
         Boolean isBookExist = bookRepository.existsById(id);
         if (isBookExist) {
@@ -34,6 +41,7 @@ public class BookService {
         }
     }
 
+    @Transactional
     public Long deleteById(Long id) {
         Boolean isBookExist = bookRepository.existsById(id);
         if (isBookExist) {
@@ -43,5 +51,10 @@ public class BookService {
         else {
             throw new NotFoundException("Book is not found");
         }
+    }
+    public PageResponse<Book> findByTitle(String title, Pageable pageRequest) {
+        Page<Book> page = this.bookRepository.findByTitleContainingIgnoreCase(title, pageRequest);
+        PageResponse<Book> pageResponse = new PageResponse<>(page);
+        return pageResponse;
     }
 }

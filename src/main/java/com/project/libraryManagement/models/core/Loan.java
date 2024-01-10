@@ -25,6 +25,7 @@ public class Loan {
     private LocalDateTime endDate;
 
     @OneToMany
+    @JoinColumn(name = "loan_id", referencedColumnName = "id")
     private List<Book> books;
 
     @Enumerated(value = EnumType.STRING)
