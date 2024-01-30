@@ -52,7 +52,7 @@ public class BookService {
             throw new NotFoundException("Book is not found");
         }
     }
-    public PageResponse<Book> findByTitle(String title, Pageable pageRequest) {
+    public PageResponse<Book> findByTitlePageable(String title, Pageable pageRequest) {
         Page<Book> page = this.bookRepository.findByTitleContainingIgnoreCase(title, pageRequest);
         PageResponse<Book> pageResponse = new PageResponse<>(page);
         return pageResponse;
