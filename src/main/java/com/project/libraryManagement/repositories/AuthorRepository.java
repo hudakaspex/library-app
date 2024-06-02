@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
-    Page<Author> findByFirstName(String name, Pageable page);
+    Page<Author> findByNameContaining(String name, Pageable page);
 
-    List<Author> findByFirstName(String name);
+    List<Author> findByNameContaining(String name);
 }

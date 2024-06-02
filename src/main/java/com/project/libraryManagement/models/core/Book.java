@@ -1,18 +1,17 @@
 package com.project.libraryManagement.models.core;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.project.libraryManagement.models.enums.BookType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
-
 @Getter
 @Setter
 @Entity
+// handling error Type definition error: [simple type, class org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor] becase author is Lazy Load
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Book {
 
    @Id()
@@ -22,11 +21,11 @@ public class Book {
    @NotBlank(message = "Title is required")
    private String title;
 
-   @OneToOne
+   @ManyToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "authorId", referencedColumnName = "id")
    private Author author;
 
-   @Column(name = "publication_date")
-   private OffsetDateTime publicationDate;
+   private Long publicationDate;
 
    private String ISBN;
 

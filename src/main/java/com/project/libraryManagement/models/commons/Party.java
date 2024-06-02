@@ -24,4 +24,7 @@ public abstract class Party {
     private String address;
 
     private String email;
+
+    private long birthdate;
+
 }
