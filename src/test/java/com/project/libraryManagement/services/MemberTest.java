@@ -67,10 +67,8 @@ public class MemberTest {
     @Test
     public void testUpdateMember() {
         member.setName("UPDATE");
-        member.setDateJoined(LocalDateTime.now());
         MemberDTO memberDTO = new MemberDTO();
         memberDTO.setName(member.getName());
-        memberDTO.setDateJoined(member.getDateJoined());
         //WHEN
         when(this.memberRepository.save(member)).thenReturn(member);
         when(this.modelMapper.map(any(), any())).thenReturn(memberDTO);

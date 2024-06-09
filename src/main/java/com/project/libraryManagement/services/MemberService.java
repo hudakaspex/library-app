@@ -8,12 +8,9 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
-import java.util.Calendar;
 import java.util.List;
 
 @Service
-@Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;

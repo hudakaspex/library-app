@@ -1,9 +1,6 @@
 package com.project.libraryManagement.dto;
-
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,5 +15,5 @@ public class MemberDTO {
 
     private String email;
 
-    private LocalDateTime dateJoined;
+    private Long dateJoined;
 }
