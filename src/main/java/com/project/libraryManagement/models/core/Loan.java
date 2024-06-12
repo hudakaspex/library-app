@@ -30,9 +30,11 @@ public class Loan {
     @Column(name = "return_date")
     private Long returnDate;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "librarian_id", nullable = true)
     private Librarian librarian;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 }
