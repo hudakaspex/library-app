@@ -30,7 +30,7 @@ public class MemberService {
 
     @Transactional
     public MemberDTO create(Member member) {
-        Member savedMember = initalSetMember(member);
+        Member savedMember = setMemberName(member);
         Member createdMember = this.memberRepository.save(savedMember);
         return mapToDto(createdMember);
     }
@@ -38,7 +38,7 @@ public class MemberService {
     /**
      * this method used for initial several value for ex. Date Join and Splited member name
      * */
-    private Member initalSetMember(Member member) {
+    private Member setMemberName(Member member) {
         member.setSplitName(member.getName());
         return member;
     }
@@ -57,7 +57,8 @@ public class MemberService {
         Boolean isMemberExist = this.memberRepository.existsById(id);
         if (isMemberExist) {
             member.setId(id);
-            Member memberUpdated = this.memberRepository.save(member);
+            Member updatedNameMember = setMemberName(member);
+            Member memberUpdated = this.memberRepository.save(updatedNameMember);
             return mapToDto(memberUpdated);
         }
         else {
