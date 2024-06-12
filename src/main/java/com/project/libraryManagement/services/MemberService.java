@@ -1,12 +1,14 @@
 package com.project.libraryManagement.services;
 
 import com.project.libraryManagement.dto.MemberDTO;
+import com.project.libraryManagement.dto.PageResponse;
 import com.project.libraryManagement.models.core.Member;
 import com.project.libraryManagement.repositories.MemberRepository;
 import com.project.libraryManagement.exception.NotFoundException;
 import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -18,6 +20,12 @@ public class MemberService {
     MemberService(MemberRepository memberRepository, ModelMapper modelMapper) {
         this.memberRepository = memberRepository;
         this.modelMapper = modelMapper;
+    }
+
+    public PageResponse<Member> findByNamePageable(String name, Pageable pageable) {
+        Page<Member> page = memberRepository.findByNameContaining(name, pageable);
+        PageResponse<Member> pageResponse = new PageResponse<>(page); 
+        return pageResponse;
     }
 
     @Transactional
