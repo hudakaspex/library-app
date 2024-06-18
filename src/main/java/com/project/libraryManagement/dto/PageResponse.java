@@ -14,7 +14,8 @@ public class PageResponse<T> {
     private List<T> data;
     private Long total;
 
-    public PageResponse(Page page) {
+    @SuppressWarnings("unchecked")
+    public PageResponse(@SuppressWarnings("rawtypes") Page page) {
         data = page.getContent();
         total = page.getTotalElements();
     }

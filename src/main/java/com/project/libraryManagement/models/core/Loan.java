@@ -1,4 +1,6 @@
 package com.project.libraryManagement.models.core;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.project.libraryManagement.models.enums.LoanStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -8,6 +10,8 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
+// to prevent cyclic references if you're using Jackson for JSON serialization
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Loan {
 
     @Id
@@ -30,11 +34,11 @@ public class Loan {
     @Column(name = "return_date")
     private Long returnDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "librarian_id", nullable = true)
     private Librarian librarian;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 }

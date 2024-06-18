@@ -1,9 +1,13 @@
 package com.project.libraryManagement.services;
 
+import com.project.libraryManagement.dto.PageResponse;
 import com.project.libraryManagement.exception.NotFoundException;
 import com.project.libraryManagement.models.core.Loan;
 import com.project.libraryManagement.repositories.LoanRepository;
 import jakarta.transaction.Transactional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +18,12 @@ public class LoanService {
 
     LoanService(LoanRepository loanRepository) {
         this.loanRepository = loanRepository;
+    }
+
+    public PageResponse<Loan> findLoanByMemberName(String name, Pageable page) {
+        Page<Loan> pageLoan = loanRepository.findByMemberNameContaining(name, page);
+        PageResponse<Loan> pageResponse = new PageResponse<>(pageLoan);
+        return pageResponse;
     }
 
     public List<Loan> findAll() {

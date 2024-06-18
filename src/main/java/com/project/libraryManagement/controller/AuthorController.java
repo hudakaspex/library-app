@@ -4,8 +4,6 @@ import com.project.libraryManagement.dto.PageResponse;
 import com.project.libraryManagement.models.core.Author;
 import com.project.libraryManagement.services.AuthorService;
 import jakarta.validation.Valid;
-import lombok.extern.log4j.Log4j2;
-
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
