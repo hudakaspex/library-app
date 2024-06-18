@@ -3,6 +3,7 @@ package com.project.libraryManagement.services;
 import com.project.libraryManagement.dto.PageResponse;
 import com.project.libraryManagement.exception.NotFoundException;
 import com.project.libraryManagement.models.core.Loan;
+import com.project.libraryManagement.models.enums.LoanStatus;
 import com.project.libraryManagement.repositories.LoanRepository;
 import jakarta.transaction.Transactional;
 
@@ -30,11 +31,13 @@ public class LoanService {
         return this.loanRepository.findAll();
     }
 
+    @Transactional()
     public Loan create(Loan loan) {
+       loan.setStatus(LoanStatus.BORROWED);
        return this.loanRepository.save(loan);
     }
 
-    @Transactional
+    @Transactional()
     public Loan update(Long id, Loan loan) {
         Boolean isLoanExist = this.loanRepository.existsById(id);
         if (isLoanExist) {
@@ -46,7 +49,7 @@ public class LoanService {
         }
     }
 
-    @Transactional
+    @Transactional()
     public Long deleteById(Long id) {
         Boolean isLoanExist = this.loanRepository.existsById(id);
         if (isLoanExist) {
