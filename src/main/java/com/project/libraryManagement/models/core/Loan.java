@@ -1,6 +1,4 @@
 package com.project.libraryManagement.models.core;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.project.libraryManagement.models.enums.LoanStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,7 +9,6 @@ import java.util.List;
 @Getter
 @Entity
 // to prevent cyclic references if you're using Jackson for JSON serialization
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Loan {
 
     @Id

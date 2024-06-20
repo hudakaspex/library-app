@@ -15,13 +15,9 @@ import lombok.Setter;
 @Setter
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Member extends Person {
 
     @NotNull(message = "Date Joined is requried")
     @Column(name = "date_joined")
     private long dateJoined;
-
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    private List<Loan> loans;
 }
