@@ -46,6 +46,7 @@ public class AuthorService {
             throw new NotFoundException("Author is not found");
         }
     }
+    
     @Transactional
     public Long delete(Long id) {
         Boolean isAuthorExist = authorRepository.existsById(id);

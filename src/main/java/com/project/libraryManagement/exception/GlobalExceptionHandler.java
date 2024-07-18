@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         response.setTimestamp(System.currentTimeMillis());
         response.setError(HttpStatus.BAD_REQUEST);
-        return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -68,6 +68,6 @@ public class GlobalExceptionHandler {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         response.setTimestamp(System.currentTimeMillis());
         response.setError(HttpStatus.BAD_REQUEST);
-        return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.BAD_REQUEST);
     }
 }

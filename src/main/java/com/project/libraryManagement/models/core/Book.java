@@ -31,4 +31,6 @@ public class Book {
 
    @Enumerated(EnumType.STRING)
    private BookType type;
+
+   private Integer copies;
 }

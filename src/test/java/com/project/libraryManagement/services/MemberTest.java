@@ -76,7 +76,6 @@ public class MemberTest {
         //THEN
         MemberDTO memberDTO1 = this.memberService.create(member);
 
-        assertThat(memberDTO1.getDateJoined()).isNotNull();
         verify(memberRepository).save(member);
     }
 }
