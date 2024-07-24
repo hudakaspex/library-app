@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -54,6 +56,23 @@ public class LoanService {
         if (isLoanExist) {
                 this.loanRepository.deleteById(id);
                 return id;
+        }
+        else {
+            throw new NotFoundException("Loan is not found");
+        }
+    }
+    
+    @Transactional()
+    public Integer updateStatus(Long id, LoanStatus status) {
+        Boolean isLoanExist = this.loanRepository.existsById(id);
+        if (isLoanExist) {
+            Integer rowsAffected = this.loanRepository.updateLoanStatus(id, status);
+            if (rowsAffected > 0) {
+              Instant now = Instant.now();
+              Long returnDate = now.toEpochMilli();
+              rowsAffected = this.loanRepository.updateReturnDate(id, returnDate);         
+            }
+            return rowsAffected;
         }
         else {
             throw new NotFoundException("Loan is not found");

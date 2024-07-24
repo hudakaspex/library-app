@@ -1,6 +1,7 @@
 package com.project.libraryManagement.controller;
 
 import com.project.libraryManagement.dto.PageResponse;
+import com.project.libraryManagement.dto.UpdateLoanStatusDto;
 import com.project.libraryManagement.models.core.Loan;
 import com.project.libraryManagement.services.LoanService;
 import org.springframework.data.domain.PageRequest;
@@ -8,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -55,5 +54,11 @@ public class LoanController {
     public ResponseEntity<?> delete(@PathVariable Long id) {
         var deletedId = loanService.deleteById(id);
         return ResponseEntity.ok(deletedId);
+    }
+
+    @PostMapping("/updateStatus")
+    public ResponseEntity<?> updateStatus(@RequestBody UpdateLoanStatusDto val) {
+        Integer id = loanService.updateStatus(val.getId(), val.getStatus());
+        return ResponseEntity.ok(id);
     }
 }
