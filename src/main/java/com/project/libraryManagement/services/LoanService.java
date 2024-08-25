@@ -1,4 +1,5 @@
 package com.project.libraryManagement.services;
+import com.project.libraryManagement.dto.LoanFilterDTO;
 import com.project.libraryManagement.dto.PageResponse;
 import com.project.libraryManagement.exception.NotFoundException;
 import com.project.libraryManagement.models.core.Loan;
@@ -10,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.time.Instant;
 import java.util.List;
 
@@ -22,8 +22,8 @@ public class LoanService {
         this.loanRepository = loanRepository;
     }
 
-    public PageResponse<Loan> findLoanByMemberName(String name, Pageable page) {
-        Page<Loan> pageLoan = loanRepository.findByMemberNameContaining(name, page);
+    public PageResponse<Loan> getLoanWithFilter(String name, LoanStatus status , Pageable page) {
+        Page<Loan> pageLoan = loanRepository.getLoanWithFilter(name, status, page);
         PageResponse<Loan> pageResponse = new PageResponse<>(pageLoan);
         return pageResponse;
     }

@@ -3,7 +3,10 @@ package com.project.libraryManagement.controller;
 import com.project.libraryManagement.dto.PageResponse;
 import com.project.libraryManagement.dto.UpdateLoanStatusDto;
 import com.project.libraryManagement.models.core.Loan;
+import com.project.libraryManagement.models.enums.LoanStatus;
 import com.project.libraryManagement.services.LoanService;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +17,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/loans")
+@Slf4j
 public class LoanController {
     private final LoanService loanService;
 
@@ -24,11 +28,12 @@ public class LoanController {
     @GetMapping("/search")
     public ResponseEntity<PageResponse<Loan>> findLoanByMemberName(
         @RequestParam(defaultValue = "", name = "name") String memberName,
+        @RequestParam(required = false) LoanStatus status,
         @RequestParam(defaultValue = "10") int pageSize,
         @RequestParam(defaultValue = "0") int pageNumber
     ) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
-        PageResponse<Loan> pageResponse = loanService.findLoanByMemberName(memberName, pageRequest);
+        PageResponse<Loan> pageResponse = loanService.getLoanWithFilter(memberName, status, pageRequest);
         return ResponseEntity.ok(pageResponse);
     }
     

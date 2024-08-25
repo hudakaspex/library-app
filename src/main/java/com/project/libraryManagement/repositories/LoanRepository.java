@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LoanRepository extends JpaRepository<Loan, Long> {
-    @Query("SELECT l FROM Loan l JOIN l.member m WHERE m.name LIKE %:name%")
-    Page<Loan> findByMemberNameContaining(@Param("name") String name, Pageable page);
+    @Query("SELECT l FROM Loan l JOIN l.member m WHERE m.name LIKE %:name% AND (l.status= :status OR :status IS NULL)")
+    Page<Loan> getLoanWithFilter(@Param("name") String name, @Param("status") LoanStatus status ,Pageable page);
 
     @Modifying
     @Query("UPDATE Loan l SET l.status = :status WHERE l.id = :id")
