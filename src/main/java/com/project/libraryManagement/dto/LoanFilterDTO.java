@@ -10,4 +10,5 @@ import lombok.Setter;
 public class LoanFilterDTO {
     String memberName;
     LoanStatus loanStatus;
+    
 }
