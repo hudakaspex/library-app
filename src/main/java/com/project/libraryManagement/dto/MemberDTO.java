@@ -16,5 +16,4 @@ public class MemberDTO {
     private String email;
 
     private Long dateJoined;
-    
 }
