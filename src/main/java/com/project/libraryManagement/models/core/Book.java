@@ -33,4 +33,8 @@ public class Book {
    private BookType type;
 
    private Integer copies;
+
+   @OneToOne(cascade = {CascadeType.ALL})
+   @JoinColumn(name = "placementId", referencedColumnName = "id")
+   private Placement placement;
 }
