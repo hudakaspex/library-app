@@ -10,7 +10,6 @@ import lombok.Setter;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Member extends Person {
-
     @NotNull(message = "Date Joined is requried")
     @Column(name = "date_joined")
     private long dateJoined;
