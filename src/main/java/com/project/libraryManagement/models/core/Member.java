@@ -1,5 +1,4 @@
 package com.project.libraryManagement.models.core;
-
 import com.project.libraryManagement.models.commons.Person;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
