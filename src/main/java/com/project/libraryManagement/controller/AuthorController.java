@@ -42,6 +42,7 @@ public class AuthorController {
        Author createdAuthor = this.authorService.create(author);
        return ResponseEntity.ok(createdAuthor);
     }
+    
     @PutMapping("/{id}")
     public ResponseEntity<Author> update(@PathVariable Long id, @Valid @RequestBody Author author) {
         Author updatedAuthor = authorService.update(id, author);
