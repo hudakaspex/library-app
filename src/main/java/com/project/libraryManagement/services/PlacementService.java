@@ -2,8 +2,11 @@ package com.project.libraryManagement.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.project.libraryManagement.dto.PageResponse;
 import com.project.libraryManagement.exception.NotFoundException;
 import com.project.libraryManagement.models.core.Placement;
 import com.project.libraryManagement.repositories.PlacementRepository;
@@ -31,8 +34,10 @@ public class PlacementService {
      *
      * @return a list of all Placement entities.
      */
-    public List<Placement> findAll() {
-        return this.placementRepository.findAll();
+    public PageResponse<Placement> findAll(Pageable pageable) {
+        Page<Placement> page = this.placementRepository.findAll(pageable);
+        PageResponse<Placement> response  = new PageResponse<Placement>(page);
+        return response;
     }
 
     /**

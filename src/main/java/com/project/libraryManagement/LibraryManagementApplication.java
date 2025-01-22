@@ -26,7 +26,9 @@ public class LibraryManagementApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**");
+				registry.addMapping("/**")
+						.allowedOrigins("http://localhost:4200")
+						.allowedMethods("DELETE", "POST", "PUT", "GET");
 			}
 		};
 	}

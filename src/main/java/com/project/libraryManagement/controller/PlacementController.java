@@ -2,10 +2,14 @@ package com.project.libraryManagement.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.libraryManagement.dto.PageResponse;
 import com.project.libraryManagement.models.core.Placement;
 import com.project.libraryManagement.services.PlacementService;
 
@@ -17,7 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
-@RequestMapping("api/placement")
+@RequestMapping("api/placements")
 public class PlacementController {
     final PlacementService placementService ;
 
@@ -26,8 +30,12 @@ public class PlacementController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Placement>> findAll() {
-        List<Placement> placement = this.placementService.findAll();
+    public ResponseEntity<PageResponse<Placement>> findAll(
+        @RequestParam(defaultValue = "10") Integer pageSize,
+        @RequestParam(defaultValue = "0") Integer pageNumber
+    ) {
+        Pageable pageable = PageRequest.of(pageNumber,  pageSize);
+        PageResponse<Placement> placement = this.placementService.findAll(pageable);
         return ResponseEntity.ok(placement);
     }
 
@@ -38,9 +46,9 @@ public class PlacementController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Placement> update(@PathVariable Long id, @RequestBody Placement entity) {
-        Placement placement = this.placementService.update(id, entity);
-        return ResponseEntity.ok(placement);
+    public ResponseEntity<Placement> update(@PathVariable Long id, @RequestBody Placement placement) {
+        Placement updatedPlacement = this.placementService.update(id, placement);
+        return ResponseEntity.ok(updatedPlacement);
     }
 
     @DeleteMapping("/{id}")
