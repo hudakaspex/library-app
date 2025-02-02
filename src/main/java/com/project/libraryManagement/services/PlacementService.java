@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.project.libraryManagement.dto.PageResponse;
 import com.project.libraryManagement.exception.NotFoundException;
-import com.project.libraryManagement.models.core.Placement;
+import com.project.libraryManagement.models.core.shelves.Placement;
 import com.project.libraryManagement.repositories.PlacementRepository;
 
 @Service
@@ -51,7 +51,7 @@ public class PlacementService {
     }
 
     public Placement update(Long id, Placement placement) {
-        boolean isPlacementExist = placementRepository.existsById(placement.getId());
+        boolean isPlacementExist = placementRepository.existsById(id);
         if (isPlacementExist) {
             placement.setId(id);
             return placementRepository.save(placement);

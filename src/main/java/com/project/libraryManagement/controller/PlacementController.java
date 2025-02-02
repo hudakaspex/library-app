@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.libraryManagement.dto.PageResponse;
-import com.project.libraryManagement.models.core.Placement;
+import com.project.libraryManagement.models.core.shelves.Placement;
 import com.project.libraryManagement.services.PlacementService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
