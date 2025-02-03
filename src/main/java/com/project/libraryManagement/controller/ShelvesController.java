@@ -27,11 +27,12 @@ public class ShelvesController {
 
     @GetMapping
     public ResponseEntity<PageResponse<Shelves>> findAll(
+        @RequestParam(defaultValue = "") String keyword,
         @RequestParam(defaultValue = "10") Integer pageSize,
         @RequestParam(defaultValue = "0") Integer pageNumber
     ) {
         PageRequest page  = PageRequest.of(pageNumber, pageSize);
-        PageResponse<Shelves> response = shelvesService.findAll(page);
+        PageResponse<Shelves> response = shelvesService.findAll(keyword, page);
         return ResponseEntity.ok(response);
     }
 

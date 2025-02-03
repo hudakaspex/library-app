@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
-import jakarta.persistence.JoinColumn;
 
 @Entity
 @Getter
@@ -21,7 +20,6 @@ public class Shelves {
     @Column(unique = true)
     private String label;
 
-    @OneToMany()
-    @JoinColumn(referencedColumnName = "id", name = "shelves_id")
+    @OneToMany(mappedBy = "shelves")
     private List<Placement> placements;
 }

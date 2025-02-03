@@ -19,8 +19,8 @@ public class ShelvesService {
         this.shelvesRepository = shelvesRepository;
     }
 
-    public PageResponse<Shelves> findAll(Pageable pageable) {
-        Page<Shelves> page =  this.shelvesRepository.findAll(pageable);
+    public PageResponse<Shelves> findAll(String label, Pageable pageable) {
+        Page<Shelves> page =  this.shelvesRepository.findByLabelContainingIgnoreCase(label, pageable);
         PageResponse<Shelves> pageResponse = new PageResponse<Shelves>(page);
         return pageResponse;
     }
