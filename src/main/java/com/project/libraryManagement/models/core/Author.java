@@ -12,6 +12,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+// avoid cyc
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Author extends Person {
 }

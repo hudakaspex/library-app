@@ -66,7 +66,7 @@ public class BookService {
         return pageResponse;
     }
 
-    public List<AutoCompleteResponse> findByTitleIgnoreEmpty(String query) {
+    public List<AutoCompleteResponse> searchByTitle(String query) {
         if (!query.isEmpty() && !query.isBlank()) {
             List<AutoCompleteResponse> books = bookRepository.findByTitleStartWith(query);
             return books;

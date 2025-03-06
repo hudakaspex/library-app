@@ -32,9 +32,9 @@ public class BookController {
 
     @GetMapping("/autocomplete")
     public ResponseEntity<List<AutoCompleteResponse>> findByTitle(
-        @RequestParam(name = "query") String query
+        @RequestParam() String query
     ) {
-        List<AutoCompleteResponse> books = bookService.findByTitleIgnoreEmpty(query);
+        List<AutoCompleteResponse> books = bookService.searchByTitle(query);
         return ResponseEntity.ok(books);
     }
     
