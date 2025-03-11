@@ -74,4 +74,14 @@ public class BookService {
             return new ArrayList<AutoCompleteResponse>();
         }
     }
+
+    public List<AutoCompleteResponse> searchByTitleNotInPlacement(String query) {
+        if (!query.isBlank() && !query.isEmpty()) {
+            List<AutoCompleteResponse> books = bookRepository.findByTitleNotInPlacement(query);
+            return books;
+        }
+        else {
+            return new ArrayList<AutoCompleteResponse>();
+        }
+    }
 }

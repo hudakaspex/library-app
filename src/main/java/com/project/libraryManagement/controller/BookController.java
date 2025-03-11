@@ -37,6 +37,14 @@ public class BookController {
         List<AutoCompleteResponse> books = bookService.searchByTitle(query);
         return ResponseEntity.ok(books);
     }
+
+    @GetMapping("/autocomplete/notInPlacement")
+    public ResponseEntity<List<AutoCompleteResponse>> findByTitleNotInPlacement(
+        @RequestParam() String query
+    ) {
+        List<AutoCompleteResponse> books = bookService.searchByTitleNotInPlacement(query);
+        return ResponseEntity.ok(books);
+    }
     
     @GetMapping()
     public ResponseEntity<PageResponse<Book>> getBooks(
