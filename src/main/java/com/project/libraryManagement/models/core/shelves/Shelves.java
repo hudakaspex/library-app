@@ -1,7 +1,8 @@
 package com.project.libraryManagement.models.core.shelves;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,7 +24,6 @@ public class Shelves {
     @Column(unique = true)
     private String label;
 
-    @JsonManagedReference //prevent recursion during JSON serialized from parent
     @OneToMany(mappedBy = "shelves")
     private List<Placement> placements;
 }

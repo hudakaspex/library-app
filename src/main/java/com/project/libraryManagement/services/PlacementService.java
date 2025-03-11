@@ -2,11 +2,13 @@ package com.project.libraryManagement.services;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.project.libraryManagement.dto.PageResponse;
+import com.project.libraryManagement.dto.placement.PlacementDto;
 import com.project.libraryManagement.exception.NotFoundException;
 import com.project.libraryManagement.models.core.shelves.Placement;
 import com.project.libraryManagement.repositories.PlacementRepository;
@@ -14,9 +16,11 @@ import com.project.libraryManagement.repositories.PlacementRepository;
 @Service
 public class PlacementService {
     private final PlacementRepository placementRepository;
+    private final ModelMapper modelMapper;
 
-    PlacementService(PlacementRepository placementRepository) {
+    PlacementService(PlacementRepository placementRepository, ModelMapper modelMapper) {
         this.placementRepository = placementRepository;
+        this.modelMapper = modelMapper;
     }
 
     public Placement findById(Long id) {
@@ -34,9 +38,12 @@ public class PlacementService {
      *
      * @return a list of all Placement entities.
      */
-    public PageResponse<Placement> findAll(Pageable pageable) {
+    public PageResponse<PlacementDto> findAll(Pageable pageable) {
         Page<Placement> page = this.placementRepository.findAll(pageable);
-        PageResponse<Placement> response  = new PageResponse<Placement>(page);
+        Page<PlacementDto> pageDto = page.map((Placement placement) -> {
+            return this.convertToDto(placement);
+        });
+        PageResponse<PlacementDto> response  = new PageResponse<PlacementDto>(pageDto);
         return response;
     }
 
@@ -46,15 +53,17 @@ public class PlacementService {
      * @param placement the Placement entity to be created and saved
      * @return the saved Placement entity
      */
-    public Placement create(Placement placement) {
-        return this.placementRepository.save(placement);
+    public PlacementDto create(Placement placement) {
+        Placement createPlacement = this.placementRepository.save(placement);
+        return this.convertToDto(createPlacement);
     }
 
-    public Placement update(Long id, Placement placement) {
+    public PlacementDto update(Long id, Placement placement) {
         boolean isPlacementExist = placementRepository.existsById(id);
         if (isPlacementExist) {
             placement.setId(id);
-            return placementRepository.save(placement);
+            Placement updatedPlacement = placementRepository.save(placement);
+            return this.convertToDto(updatedPlacement);
         } else {
             throw new NotFoundException("Placement is not found");
         }
@@ -72,6 +81,11 @@ public class PlacementService {
         } else {
             throw new NotFoundException("Placement is not found");
         }
+    }
+
+    private PlacementDto convertToDto(Placement placement) {
+        PlacementDto placementDto = modelMapper.map(placement, PlacementDto.class);
+        return placementDto;
     }
 
 }

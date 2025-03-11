@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.libraryManagement.dto.PageResponse;
+import com.project.libraryManagement.dto.placement.PlacementDto;
 import com.project.libraryManagement.models.core.shelves.Placement;
 import com.project.libraryManagement.services.PlacementService;
 
@@ -30,24 +31,24 @@ public class PlacementController {
     }
 
     @GetMapping()
-    public ResponseEntity<PageResponse<Placement>> findAll(
+    public ResponseEntity<PageResponse<PlacementDto>> findAll(
         @RequestParam(defaultValue = "10") Integer pageSize,
         @RequestParam(defaultValue = "0") Integer pageNumber
     ) {
         Pageable pageable = PageRequest.of(pageNumber,  pageSize);
-        PageResponse<Placement> placement = this.placementService.findAll(pageable);
+        PageResponse<PlacementDto> placement = this.placementService.findAll(pageable);
         return ResponseEntity.ok(placement);
     }
 
     @PostMapping()
-    public ResponseEntity<Placement> create(@RequestBody Placement placement) {
-        Placement result = placementService.create(placement);
+    public ResponseEntity<PlacementDto> create(@RequestBody Placement placement) {
+        PlacementDto result = placementService.create(placement);
         return ResponseEntity.ok(result);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Placement> update(@PathVariable Long id, @RequestBody Placement placement) {
-        Placement updatedPlacement = this.placementService.update(id, placement);
+    public ResponseEntity<PlacementDto> update(@PathVariable Long id, @RequestBody Placement placement) {
+        PlacementDto updatedPlacement = this.placementService.update(id, placement);
         return ResponseEntity.ok(updatedPlacement);
     }
 
