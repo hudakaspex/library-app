@@ -22,10 +22,10 @@ public class ShelvesConverter {
         ShelvesDto shelvesDto = new ShelvesDto();
         shelvesDto.setId(shelves.getId());
         shelvesDto.setLabel(shelves.getLabel());
-        List<PlacementDto> placements = shelves.getPlacements().stream().map(placement -> {
-            return modelMapper.map(placement, PlacementDto.class);
-        }).toList();
-        shelvesDto.setPlacements(placements);
+            List<PlacementDto> placements = shelves.getPlacements().stream().map(placement -> {
+                return modelMapper.map(placement, PlacementDto.class);
+            }).toList();
+            shelvesDto.setPlacements(placements);
         return shelvesDto;
     }
 

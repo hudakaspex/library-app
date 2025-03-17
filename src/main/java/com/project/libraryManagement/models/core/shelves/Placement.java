@@ -23,7 +23,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(uniqueConstraints = {
-    @UniqueConstraint(name = "UniquePlacement", columnNames = {"shelves_id", "section", "level", "book_id"})
+    @UniqueConstraint(name = "UniquePlacement", columnNames = {"shelves_id", "section", "level"})
 })
 public class Placement {
     @Id()

@@ -25,5 +25,5 @@ public class Shelves {
     private String label;
 
     @OneToMany(mappedBy = "shelves")
-    private List<Placement> placements;
+    private List<Placement> placements = List.of();
 }
