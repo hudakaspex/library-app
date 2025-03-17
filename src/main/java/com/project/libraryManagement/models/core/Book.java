@@ -3,6 +3,7 @@ package com.project.libraryManagement.models.core;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.project.libraryManagement.models.enums.BookType;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -36,6 +37,7 @@ public class Book {
 
    private Long publicationDate;
 
+   @Column(unique = true)
    private String ISBN;
 
    @Enumerated(EnumType.STRING)
