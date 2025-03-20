@@ -2,6 +2,7 @@ package com.project.libraryManagement.controller;
 
 import com.project.libraryManagement.dto.PageResponse;
 import com.project.libraryManagement.dto.UpdateLoanStatusDto;
+import com.project.libraryManagement.dto.loan.LoanDto;
 import com.project.libraryManagement.models.core.Loan;
 import com.project.libraryManagement.models.enums.LoanStatus;
 import com.project.libraryManagement.services.LoanService;
@@ -44,13 +45,13 @@ public class LoanController {
     } 
 
     @PostMapping()
-    public ResponseEntity<Loan> create(@RequestBody Loan loan) {
+    public ResponseEntity<Loan> create(@RequestBody LoanDto loan) {
         Loan createdLoan = loanService.create(loan);
         return ResponseEntity.ok(createdLoan);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Loan> update(@PathVariable Long id, @RequestBody Loan loan) {
+    public ResponseEntity<Loan> update(@PathVariable Long id, @RequestBody LoanDto loan) {
         Loan updatedLoan = loanService.update(id, loan);
         return ResponseEntity.ok(updatedLoan);
     }

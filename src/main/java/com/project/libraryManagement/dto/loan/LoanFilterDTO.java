@@ -1,4 +1,4 @@
-package com.project.libraryManagement.dto;
+package com.project.libraryManagement.dto.loan;
 
 import com.project.libraryManagement.models.enums.LoanStatus;
 

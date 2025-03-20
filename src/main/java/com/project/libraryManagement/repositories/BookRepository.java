@@ -17,7 +17,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Page<Book> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 
-    @Query("SELECT new com.project.libraryManagement.dto.AutoCompleteResponse(b.title, b.id) FROM Book b WHERE b.title LIKE CONCAT(:title, '%')")
+    @Query(value = "SELECT new com.project.libraryManagement.dto.AutoCompleteResponse(b.title, b.id) FROM book b LEFT JOIN loan l ON b.loan_id = l.id WHERE b.title LIKE CONCAT(:title, '%') AND b.loan_id IS NULL OR l.status != 'BORROWED'", nativeQuery = true)
     List<AutoCompleteResponse> findByTitleStartWith(@Param("title") String title);
 
     @Query("SELECT new com.project.libraryManagement.dto.AutoCompleteResponse(b.title, b.id) FROM Book b left join Placement p ON b.id = p.book.id WHERE b.title LIKE CONCAT('%', :title, '%') AND p.book.id IS NULL")

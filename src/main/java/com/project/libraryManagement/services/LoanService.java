@@ -1,9 +1,16 @@
 package com.project.libraryManagement.services;
-import com.project.libraryManagement.dto.LoanFilterDTO;
 import com.project.libraryManagement.dto.PageResponse;
+import com.project.libraryManagement.dto.loan.LoanDto;
+import com.project.libraryManagement.dto.loan.LoanFilterDTO;
 import com.project.libraryManagement.exception.NotFoundException;
+import com.project.libraryManagement.models.core.Book;
+import com.project.libraryManagement.models.core.Librarian;
 import com.project.libraryManagement.models.core.Loan;
+import com.project.libraryManagement.models.core.LoanBooks;
+import com.project.libraryManagement.models.core.Member;
 import com.project.libraryManagement.models.enums.LoanStatus;
+import com.project.libraryManagement.repositories.BookRepository;
+import com.project.libraryManagement.repositories.LoanBookRepository;
 import com.project.libraryManagement.repositories.LoanRepository;
 import jakarta.transaction.Transactional;
 
@@ -13,13 +20,23 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+
+import javax.management.RuntimeErrorException;
 
 @Service
 public class LoanService {
     private final LoanRepository loanRepository;
+    private final LoanBookRepository loanBookRepository;
+    private final BookRepository bookRepository; 
 
-    LoanService(LoanRepository loanRepository) {
+    LoanService(
+        LoanRepository loanRepository, 
+        LoanBookRepository loanBookRepository, 
+        BookRepository bookRepository) {
         this.loanRepository = loanRepository;
+        this.loanBookRepository = loanBookRepository;
+        this.bookRepository = bookRepository;
     }
 
     public PageResponse<Loan> getLoanWithFilter(String name, LoanStatus status , Pageable page) {
@@ -33,17 +50,61 @@ public class LoanService {
     }
 
     @Transactional()
-    public Loan create(Loan loan) {
-       loan.setStatus(LoanStatus.BORROWED);
-       return this.loanRepository.save(loan);
+    public Loan create(LoanDto loan) {
+        try {
+           loan.setStatus(LoanStatus.BORROWED);
+           Loan newLoan = generateLoan(loan);
+           Loan createdLoan = this.loanRepository.save(newLoan);
+           loan.setId(createdLoan.getId());
+           saveLoanBooks(loan);
+           return createdLoan;
+       } catch (Exception e) {
+            throw new RuntimeException("Error while creating loan");
+       }
     }
 
     @Transactional()
-    public Loan update(Long id, Loan loan) {
-        Boolean isLoanExist = this.loanRepository.existsById(id);
-        if (isLoanExist) {
-            loan.setId(id);
-            return this.loanRepository.save(loan);
+    private void saveLoanBooks(LoanDto loanDto) {
+       List<LoanBooks> loanBooks = loanDto.getBookIds().stream().map(bookId -> {
+           LoanBooks newLoanBook = new LoanBooks();
+           Loan loan = new Loan();
+           loan.setId(loanDto.getId());
+           Book book = this.bookRepository.findById(bookId).orElseThrow(() -> {
+                throw new NotFoundException("Book is not found");
+           });
+           newLoanBook.setBook(book);
+           newLoanBook.setLoan(loan);;
+           return newLoanBook;
+       }).toList(); 
+       this.loanBookRepository.saveAll(loanBooks);
+    }
+
+    private Loan generateLoan(LoanDto loan) {
+        Loan newLoan = new Loan();
+        Librarian librarian = new Librarian();
+        Member member = new Member();
+        member.setId(loan.getMemberId());
+        librarian.setId(loan.getLibrarianId());
+        newLoan.setId(loan.getId());
+        newLoan.setMember(member);
+        newLoan.setLibrarian(librarian);
+        newLoan.setStartDate(loan.getStartDate());
+        newLoan.setEndDate(loan.getEndDate());
+        newLoan.setStatus(loan.getStatus());
+        newLoan.setReturnDate(loan.getReturnDate());
+        newLoan.setStatus(loan.getStatus());
+        return newLoan;
+    }
+
+    @Transactional()
+    public Loan update(Long id, LoanDto loanDto) {
+        Optional<Loan> loan  = this.loanRepository.findById(id);
+        if (loan.isPresent()) {
+            Loan updatedLoan = generateLoan(loanDto);
+            this.loanRepository.save(updatedLoan);
+            // update loan books
+            saveLoanBooks(loanDto);
+            return loan.get();
         }
         else {
             throw new NotFoundException("Loan is not found");
