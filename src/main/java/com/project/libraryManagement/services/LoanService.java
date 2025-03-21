@@ -12,6 +12,8 @@ import com.project.libraryManagement.models.enums.LoanStatus;
 import com.project.libraryManagement.repositories.BookRepository;
 import com.project.libraryManagement.repositories.LoanBookRepository;
 import com.project.libraryManagement.repositories.LoanRepository;
+import com.project.libraryManagement.repositories.MemberRepository;
+
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
@@ -29,14 +31,17 @@ public class LoanService {
     private final LoanRepository loanRepository;
     private final LoanBookRepository loanBookRepository;
     private final BookRepository bookRepository; 
+    private final MemberRepository memberRepository;
 
     LoanService(
         LoanRepository loanRepository, 
         LoanBookRepository loanBookRepository, 
-        BookRepository bookRepository) {
+        BookRepository bookRepository,
+        MemberRepository memberRepository) {
         this.loanRepository = loanRepository;
         this.loanBookRepository = loanBookRepository;
         this.bookRepository = bookRepository;
+        this.memberRepository = memberRepository;
     }
 
     public PageResponse<Loan> getLoanWithFilter(String name, LoanStatus status , Pageable page) {
@@ -55,8 +60,7 @@ public class LoanService {
            loan.setStatus(LoanStatus.BORROWED);
            Loan newLoan = generateLoan(loan);
            Loan createdLoan = this.loanRepository.save(newLoan);
-           loan.setId(createdLoan.getId());
-           saveLoanBooks(loan);
+           saveLoanBooks(createdLoan, loan.getBookIds());
            return createdLoan;
        } catch (Exception e) {
             throw new RuntimeException("Error while creating loan");
@@ -64,11 +68,9 @@ public class LoanService {
     }
 
     @Transactional()
-    private void saveLoanBooks(LoanDto loanDto) {
-       List<LoanBooks> loanBooks = loanDto.getBookIds().stream().map(bookId -> {
+    private void saveLoanBooks(Loan loan, List<Long> bookIds) {
+       List<LoanBooks> loanBooks = bookIds.stream().map(bookId -> {
            LoanBooks newLoanBook = new LoanBooks();
-           Loan loan = new Loan();
-           loan.setId(loanDto.getId());
            Book book = this.bookRepository.findById(bookId).orElseThrow(() -> {
                 throw new NotFoundException("Book is not found");
            });
@@ -76,18 +78,20 @@ public class LoanService {
            newLoanBook.setLoan(loan);;
            return newLoanBook;
        }).toList(); 
-       this.loanBookRepository.saveAll(loanBooks);
+       try {
+           this.loanBookRepository.saveAll(loanBooks);
+       } catch (Exception e) {
+            throw new RuntimeException("Error while saving loan books");
+       }
     }
 
     private Loan generateLoan(LoanDto loan) {
         Loan newLoan = new Loan();
-        Librarian librarian = new Librarian();
-        Member member = new Member();
-        member.setId(loan.getMemberId());
-        librarian.setId(loan.getLibrarianId());
-        newLoan.setId(loan.getId());
+        Member member = memberRepository.findById(loan.getMemberId()).orElseThrow(() -> {
+            throw new NotFoundException("Member is not found");
+        });
         newLoan.setMember(member);
-        newLoan.setLibrarian(librarian);
+        newLoan.setId(loan.getId());
         newLoan.setStartDate(loan.getStartDate());
         newLoan.setEndDate(loan.getEndDate());
         newLoan.setStatus(loan.getStatus());
@@ -103,7 +107,7 @@ public class LoanService {
             Loan updatedLoan = generateLoan(loanDto);
             this.loanRepository.save(updatedLoan);
             // update loan books
-            saveLoanBooks(loanDto);
+            saveLoanBooks(updatedLoan, loanDto.getBookIds());
             return loan.get();
         }
         else {
