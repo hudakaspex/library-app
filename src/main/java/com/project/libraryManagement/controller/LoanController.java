@@ -3,6 +3,7 @@ package com.project.libraryManagement.controller;
 import com.project.libraryManagement.dto.PageResponse;
 import com.project.libraryManagement.dto.UpdateLoanStatusDto;
 import com.project.libraryManagement.dto.loan.LoanDto;
+import com.project.libraryManagement.dto.loan.LoanHttpRequest;
 import com.project.libraryManagement.models.core.Loan;
 import com.project.libraryManagement.models.enums.LoanStatus;
 import com.project.libraryManagement.services.LoanService;
@@ -27,32 +28,32 @@ public class LoanController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<PageResponse<Loan>> findLoanByMemberName(
+    public ResponseEntity<PageResponse<LoanDto>> findLoanByMemberName(
         @RequestParam(defaultValue = "", name = "name") String memberName,
         @RequestParam(required = false) LoanStatus status,
         @RequestParam(defaultValue = "10") int pageSize,
         @RequestParam(defaultValue = "0") int pageNumber
     ) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
-        PageResponse<Loan> pageResponse = loanService.getLoanWithFilter(memberName, status, pageRequest);
+        PageResponse<LoanDto> pageResponse = loanService.getLoanWithFilter(memberName, status, pageRequest);
         return ResponseEntity.ok(pageResponse);
     }
     
     @GetMapping()
-    public ResponseEntity<List<Loan>> findAll() {
-        List<Loan> loans = loanService.findAll();
+    public ResponseEntity<List<LoanDto>> findAll() {
+        List<LoanDto> loans = loanService.findAll();
         return ResponseEntity.ok(loans);
     } 
 
     @PostMapping()
-    public ResponseEntity<Loan> create(@RequestBody LoanDto loan) {
-        Loan createdLoan = loanService.create(loan);
+    public ResponseEntity<LoanDto> create(@RequestBody LoanHttpRequest loan) {
+        LoanDto createdLoan = loanService.create(loan);
         return ResponseEntity.ok(createdLoan);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Loan> update(@PathVariable Long id, @RequestBody LoanDto loan) {
-        Loan updatedLoan = loanService.update(id, loan);
+    public ResponseEntity<LoanDto> update(@PathVariable Long id, @RequestBody LoanHttpRequest loan) {
+        LoanDto updatedLoan = loanService.update(id, loan);
         return ResponseEntity.ok(updatedLoan);
     }
 

@@ -1,4 +1,6 @@
 package com.project.libraryManagement.models.core;
+import java.util.List;
+
 import com.project.libraryManagement.models.enums.LoanStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,6 +22,9 @@ public class Loan {
 
     @Enumerated(value = EnumType.STRING)
     private LoanStatus status;
+
+    @OneToMany(mappedBy = "loan", fetch = FetchType.LAZY)
+    private List<LoanBooks> loanBooks;
 
     @Column(name = "return_date")
     private Long returnDate;

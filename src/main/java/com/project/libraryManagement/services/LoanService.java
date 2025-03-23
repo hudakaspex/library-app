@@ -1,10 +1,9 @@
 package com.project.libraryManagement.services;
 import com.project.libraryManagement.dto.PageResponse;
+import com.project.libraryManagement.dto.loan.LoanHttpRequest;
 import com.project.libraryManagement.dto.loan.LoanDto;
-import com.project.libraryManagement.dto.loan.LoanFilterDTO;
 import com.project.libraryManagement.exception.NotFoundException;
 import com.project.libraryManagement.models.core.Book;
-import com.project.libraryManagement.models.core.Librarian;
 import com.project.libraryManagement.models.core.Loan;
 import com.project.libraryManagement.models.core.LoanBooks;
 import com.project.libraryManagement.models.core.Member;
@@ -24,8 +23,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-import javax.management.RuntimeErrorException;
-
 @Service
 public class LoanService {
     private final LoanRepository loanRepository;
@@ -44,24 +41,31 @@ public class LoanService {
         this.memberRepository = memberRepository;
     }
 
-    public PageResponse<Loan> getLoanWithFilter(String name, LoanStatus status , Pageable page) {
+    public PageResponse<LoanDto> getLoanWithFilter(String name, LoanStatus status , Pageable page) {
         Page<Loan> pageLoan = loanRepository.getLoanWithFilter(name, status, page);
-        PageResponse<Loan> pageResponse = new PageResponse<>(pageLoan);
+        Page<LoanDto> pageLoanMap = pageLoan.map(loan -> {
+            return mappingLoan(loan);
+        });
+        PageResponse<LoanDto> pageResponse = new PageResponse<>(pageLoanMap);
         return pageResponse;
     }
+    
 
-    public List<Loan> findAll() {
-        return this.loanRepository.findAll();
+    public List<LoanDto> findAll() {
+        List<LoanDto> loanDtos = this.loanRepository.findAll().stream().map(loan -> {
+            return mappingLoan(loan);
+        }).toList();
+        return loanDtos;
     }
 
     @Transactional()
-    public Loan create(LoanDto loan) {
+    public LoanDto create(LoanHttpRequest loan) {
         try {
            loan.setStatus(LoanStatus.BORROWED);
            Loan newLoan = generateLoan(loan);
            Loan createdLoan = this.loanRepository.save(newLoan);
            saveLoanBooks(createdLoan, loan.getBookIds());
-           return createdLoan;
+           return mappingLoan(createdLoan);
        } catch (Exception e) {
             throw new RuntimeException("Error while creating loan");
        }
@@ -85,7 +89,7 @@ public class LoanService {
        }
     }
 
-    private Loan generateLoan(LoanDto loan) {
+    private Loan generateLoan(LoanHttpRequest loan) {
         Loan newLoan = new Loan();
         Member member = memberRepository.findById(loan.getMemberId()).orElseThrow(() -> {
             throw new NotFoundException("Member is not found");
@@ -101,14 +105,14 @@ public class LoanService {
     }
 
     @Transactional()
-    public Loan update(Long id, LoanDto loanDto) {
+    public LoanDto update(Long id, LoanHttpRequest loanDto) {
         Optional<Loan> loan  = this.loanRepository.findById(id);
         if (loan.isPresent()) {
             Loan updatedLoan = generateLoan(loanDto);
             this.loanRepository.save(updatedLoan);
             // update loan books
             saveLoanBooks(updatedLoan, loanDto.getBookIds());
-            return loan.get();
+            return mappingLoan(loan.get());
         }
         else {
             throw new NotFoundException("Loan is not found");
@@ -142,5 +146,20 @@ public class LoanService {
         else {
             throw new NotFoundException("Loan is not found");
         }
+    }
+
+    private LoanDto mappingLoan(Loan loan) {
+        LoanDto loanDto = new LoanDto();
+        loanDto.setId(loan.getId());
+        loanDto.setStartDate(loan.getStartDate());
+        loanDto.setEndDate(loan.getEndDate());
+        loanDto.setStatus(loan.getStatus());
+        loanDto.setReturnDate(loan.getReturnDate());
+        loanDto.setMember(loan.getMember());
+        List<Book> books = loan.getLoanBooks().stream().map(loanBook -> {
+            return loanBook.getBook();
+        }).toList();
+        loanDto.setBooks(books);
+        return loanDto;
     }
 }
