@@ -1,4 +1,5 @@
 package com.project.libraryManagement.models.core;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.project.libraryManagement.models.enums.LoanStatus;
@@ -23,8 +24,8 @@ public class Loan {
     @Enumerated(value = EnumType.STRING)
     private LoanStatus status;
 
-    @OneToMany(mappedBy = "loan", fetch = FetchType.LAZY)
-    private List<LoanBooks> loanBooks;
+    @OneToMany(mappedBy = "loan", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<LoanBooks> loanBooks = new ArrayList<LoanBooks>();
 
     @Column(name = "return_date")
     private Long returnDate;

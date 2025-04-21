@@ -12,7 +12,6 @@ import com.project.libraryManagement.repositories.BookRepository;
 import com.project.libraryManagement.repositories.LoanBookRepository;
 import com.project.libraryManagement.repositories.LoanRepository;
 import com.project.libraryManagement.repositories.MemberRepository;
-
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
@@ -58,21 +57,38 @@ public class LoanService {
         return loanDtos;
     }
 
+    public LoanDto findById(Long id) {
+        Optional<Loan> loan = this.loanRepository.findById(id);
+        if (loan.isPresent()) {
+            loan.get().getLoanBooks().size(); // initialize loan books
+            LoanDto loanDto = mappingLoan(loan.get());
+            return loanDto;
+        } else {
+            throw new NotFoundException("Loan is not found");
+        }
+    }
+
     @Transactional()
     public LoanDto create(LoanHttpRequest loan) {
         try {
            loan.setStatus(LoanStatus.BORROWED);
            Loan newLoan = generateLoan(loan);
            Loan createdLoan = this.loanRepository.save(newLoan);
-           saveLoanBooks(createdLoan, loan.getBookIds());
-           return mappingLoan(createdLoan);
+           List<LoanBooks> loanBooks = saveLoanBooks(createdLoan, loan.getBookIds());
+           createdLoan.setLoanBooks(loanBooks);
+            // Refresh the entity to get latest state 
+            //"this is only noted for reference, that when we use flush, we can get the latest state of the entity"
+            // this.loanRepository.flush();
+            // this.entityManager.refresh(createdLoan); refresh the entity to get the latest state
+           LoanDto loanDto = mappingLoan(createdLoan);
+           return loanDto;
        } catch (Exception e) {
             throw new RuntimeException("Error while creating loan");
        }
     }
 
     @Transactional()
-    private void saveLoanBooks(Loan loan, List<Long> bookIds) {
+    private List<LoanBooks> saveLoanBooks(Loan loan, List<Long> bookIds) {
        List<LoanBooks> loanBooks = bookIds.stream().map(bookId -> {
            LoanBooks newLoanBook = new LoanBooks();
            Book book = this.bookRepository.findById(bookId).orElseThrow(() -> {
@@ -83,7 +99,8 @@ public class LoanService {
            return newLoanBook;
        }).toList(); 
        try {
-           this.loanBookRepository.saveAll(loanBooks);
+          List<LoanBooks> savedLoanBooks = this.loanBookRepository.saveAll(loanBooks);
+          return savedLoanBooks;
        } catch (Exception e) {
             throw new RuntimeException("Error while saving loan books");
        }
@@ -111,7 +128,6 @@ public class LoanService {
             Loan updatedLoan = generateLoan(loanDto);
             this.loanRepository.save(updatedLoan);
             // update loan books
-            saveLoanBooks(updatedLoan, loanDto.getBookIds());
             return mappingLoan(loan.get());
         }
         else {
