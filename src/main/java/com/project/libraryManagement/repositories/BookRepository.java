@@ -22,4 +22,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Query("SELECT new com.project.libraryManagement.dto.AutoCompleteResponse(b.title, b.id) FROM Book b left join Placement p ON b.id = p.book.id WHERE b.title LIKE CONCAT('%', :title, '%') AND p.book.id IS NULL")
     List<AutoCompleteResponse> findByTitleNotInPlacement(@Param("title") String title);
+
+    @Query("SELECT new com.project.libraryManagement.dto.AutoCompleteResponse(b.title, b.id) FROM Book b LEFT JOIN LoanBooks lb ON b.id = lb.book.id "+
+    "LEFT JOIN Loan l ON l.id = lb.loan.id "+
+    "WHERE b.title LIKE CONCAT('%', :title, '%') AND (lb.book.id IS NULL OR l.status != 'BORROWED')")
+    List<AutoCompleteResponse> findByTitleNotInLoanBook(@Param("title") String title);
+
 }

@@ -60,7 +60,6 @@ public class LoanService {
     public LoanDto findById(Long id) {
         Optional<Loan> loan = this.loanRepository.findById(id);
         if (loan.isPresent()) {
-            loan.get().getLoanBooks().size(); // initialize loan books
             LoanDto loanDto = mappingLoan(loan.get());
             return loanDto;
         } else {
@@ -95,7 +94,7 @@ public class LoanService {
                 throw new NotFoundException("Book is not found");
            });
            newLoanBook.setBook(book);
-           newLoanBook.setLoan(loan);;
+           newLoanBook.setLoan(loan);
            return newLoanBook;
        }).toList(); 
        try {
@@ -106,33 +105,43 @@ public class LoanService {
        }
     }
 
-    private Loan generateLoan(LoanHttpRequest loan) {
-        Loan newLoan = new Loan();
-        Member member = memberRepository.findById(loan.getMemberId()).orElseThrow(() -> {
-            throw new NotFoundException("Member is not found");
-        });
-        newLoan.setMember(member);
-        newLoan.setId(loan.getId());
-        newLoan.setStartDate(loan.getStartDate());
-        newLoan.setEndDate(loan.getEndDate());
-        newLoan.setStatus(loan.getStatus());
-        newLoan.setReturnDate(loan.getReturnDate());
-        newLoan.setStatus(loan.getStatus());
-        return newLoan;
-    }
-
     @Transactional()
     public LoanDto update(Long id, LoanHttpRequest loanDto) {
         Optional<Loan> loan  = this.loanRepository.findById(id);
         if (loan.isPresent()) {
-            Loan updatedLoan = generateLoan(loanDto);
-            this.loanRepository.save(updatedLoan);
+            List<LoanBooks> newLoanBooks = generateNewLoanBook(loan.get(), loanDto.getBookIds());
+            Loan updateLoanBeforeSave = generateLoan(loanDto);
+            updateLoanBeforeSave.getLoanBooks().addAll(loan.get().getLoanBooks());
+            updateLoanBeforeSave.getLoanBooks().addAll(newLoanBooks);
+            Loan updatedLoan = this.loanRepository.save(updateLoanBeforeSave);
             // update loan books
-            return mappingLoan(loan.get());
+            return mappingLoan(updatedLoan);
         }
         else {
             throw new NotFoundException("Loan is not found");
         }
+    }
+
+    /**
+     * find not generate loan book based on book
+     * @param loan
+     * @param bookIds
+     * @return
+     */
+    private List<LoanBooks> generateNewLoanBook(Loan loan, List<Long> bookIds) {
+        List<LoanBooks> loanBooks = bookIds.stream()
+        .filter(id -> {
+            boolean isBookExist = loan.getLoanBooks().stream().map(val -> val.getBook().getId()).anyMatch(bookId -> bookId == id);
+            return isBookExist == false;
+        }).map(id -> {
+            Book book = bookRepository.findById(id)
+            .orElseThrow(() -> {
+                return new NotFoundException("Book with id {id} is not found");
+            });
+            LoanBooks newLoanBook = mappingLoanBook(loan, book);
+            return newLoanBook;
+        }).toList();
+        return loanBooks;
     }
 
     @Transactional()
@@ -162,6 +171,29 @@ public class LoanService {
         else {
             throw new NotFoundException("Loan is not found");
         }
+    }
+
+    private Loan generateLoan(LoanHttpRequest loan) {
+        Loan newLoan = new Loan();
+        Member member = memberRepository.findById(loan.getMemberId()).orElseThrow(() -> {
+            throw new NotFoundException("Member is not found");
+        });
+        newLoan.setMember(member);
+        newLoan.setId(loan.getId());
+        newLoan.setStartDate(loan.getStartDate());
+        newLoan.setEndDate(loan.getEndDate());
+        newLoan.setStatus(loan.getStatus());
+        newLoan.setReturnDate(loan.getReturnDate());
+        newLoan.setStatus(loan.getStatus());
+        return newLoan;
+    }
+
+    private LoanBooks mappingLoanBook(Loan loan, Book book) {
+        LoanBooks loanBookDto = new LoanBooks();
+        loanBookDto.setId(null);
+        loanBookDto.setBook(book);
+        loanBookDto.setLoan(loan);
+        return loanBookDto;
     }
 
     private LoanDto mappingLoan(Loan loan) {

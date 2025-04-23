@@ -84,4 +84,14 @@ public class BookService {
             return new ArrayList<AutoCompleteResponse>();
         }
     }
+
+    public List<AutoCompleteResponse> searchBookNotInLoan(String query) {
+        if (!query.isEmpty() && !query.isEmpty()) {
+            List<AutoCompleteResponse> books = bookRepository.findByTitleNotInLoanBook(query);
+            return books;
+        }
+        else {
+            return List.of();
+        }
+    }
 }

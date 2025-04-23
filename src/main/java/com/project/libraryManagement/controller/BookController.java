@@ -45,6 +45,13 @@ public class BookController {
         List<AutoCompleteResponse> books = bookService.searchByTitleNotInPlacement(query);
         return ResponseEntity.ok(books);
     }
+
+    @GetMapping("/autocomplete/notInLoan")
+    public ResponseEntity<List<AutoCompleteResponse>> findBooksNotInLoan(@RequestParam String query) {
+        List<AutoCompleteResponse> books = bookService.searchBookNotInLoan(query);
+        return ResponseEntity.ok(books);
+    }
+    
     
     @GetMapping()
     public ResponseEntity<PageResponse<Book>> getBooks(
