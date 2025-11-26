@@ -4,7 +4,6 @@ import com.project.libraryManagement.dto.PageResponse;
 import com.project.libraryManagement.dto.UpdateLoanStatusDto;
 import com.project.libraryManagement.dto.loan.LoanDto;
 import com.project.libraryManagement.dto.loan.LoanHttpRequest;
-import com.project.libraryManagement.models.core.Loan;
 import com.project.libraryManagement.models.enums.LoanStatus;
 import com.project.libraryManagement.services.LoanService;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.project.libraryManagement.userManagement.utils;
+package com.project.libraryManagement.userManagement.services;
 
 import java.security.Key;
 import java.util.Date;
